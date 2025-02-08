@@ -1,5 +1,4 @@
 from fastapi import APIRouter, Depends
-from sqlmodel import select
 from ..dependencies.db import get_db_session
 from ..models.post_models import *
 from ..sevices.post_service import PostService

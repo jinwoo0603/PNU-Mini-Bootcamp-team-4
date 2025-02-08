@@ -3,7 +3,8 @@ from sqlmodel import (
     Session, select
 )
 import time
-from app.models.post_models import *
+from ..models.post_models import *
+from ..models.utils import RESULT_CODE
 
 class PostService:
     def get_filtered_posts(self,
@@ -53,7 +54,7 @@ class PostService:
                     req: UpdatePostReq) -> tuple[Post|None,RESULT_CODE]:
         oldPost = db.get(Post, post_id)
         if not oldPost:
-            return (None,RESULT_CODE.NOT_FOUND)
+            return (None, RESULT_CODE.NOT_FOUND)
         
         dictToUpdate = asdict(req)
         oldPost.sqlmodel_update(dictToUpdate)
@@ -67,8 +68,8 @@ class PostService:
 
     def delete_post(self,
                     db: Session,
-                    post_id: int) -> RESULT_CODE:
-        post = db.get(Post, post_id)
+                    comment_id: int) -> RESULT_CODE:
+        post = db.get(Post, comment_id)
         if not post:
             return RESULT_CODE.NOT_FOUND 
         try:
