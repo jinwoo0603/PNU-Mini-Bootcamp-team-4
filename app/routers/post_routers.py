@@ -9,14 +9,18 @@ router = APIRouter(
 
 @router.post('/')
 def create_post(req: CreatePostReq,
-               db=Depends(get_db_session),
-               postService: PostService = Depends()):
+                db=Depends(get_db_session),
+                postService: PostService = Depends()):
     return postService.create_post(db=db,
                                    req=req)
 
 @router.get('/')
-def get_posts(db=Depends(get_db_session),
+def get_posts(post_id: int = None,
+              db=Depends(get_db_session),
               postService: PostService = Depends()):
+    if post_id:
+        return postService.get_post(db=db,
+                                    post_id=post_id)
     return postService.get_posts(db=db)
 
 @router.get('/filter')

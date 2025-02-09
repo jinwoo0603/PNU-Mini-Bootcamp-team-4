@@ -19,6 +19,14 @@ class PostService:
             .limit(limit)
         ).all()
         return posts
+    
+    def get_post(self,
+                 db: Session,
+                 post_id: int):
+        post = db.get(Post, post_id)
+        if not post:
+            return RESULT_CODE.NOT_FOUND 
+        return post
 
     def get_posts(self,
                   db: Session,
@@ -68,8 +76,8 @@ class PostService:
 
     def delete_post(self,
                     db: Session,
-                    comment_id: int) -> RESULT_CODE:
-        post = db.get(Post, comment_id)
+                    post_id: int) -> RESULT_CODE:
+        post = db.get(Post, post_id)
         if not post:
             return RESULT_CODE.NOT_FOUND 
         try:
