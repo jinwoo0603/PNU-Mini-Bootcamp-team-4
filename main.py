@@ -3,8 +3,6 @@ from app.dependencies.db import create_db
 from contextlib import asynccontextmanager
 from app.routers import profile_handler
 
-db_url = 'sqlite:///blog.db'
-
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     create_db()
