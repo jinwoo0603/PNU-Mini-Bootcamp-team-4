@@ -108,7 +108,7 @@ class PostService:
         if not post:
             return RESULT_CODE.NOT_FOUND
         try:
-            post.likes = post.likes + like_op
+            post.likes = post.likes + int(like_op.value)
             db.add(post)
             db.commit()
             db.refresh(post)

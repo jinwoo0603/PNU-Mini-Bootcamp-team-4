@@ -4,8 +4,8 @@ from dataclasses import dataclass
 from sqlmodel import Field, SQLModel
 
 class LIKE_OPTION(Enum):
-    LIKE = 1
-    DISLIKE = -1
+    LIKE = "1"
+    DISLIKE = "-1"
 
 class Post(SQLModel, table=True):
     post_id: int | None = Field(default=None, primary_key=True)

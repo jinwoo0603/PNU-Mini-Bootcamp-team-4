@@ -20,7 +20,6 @@ class CommentService:
                     db:Session,
                     req: CreateCommReq):
         commModel = Comment()
-        commModel.comment_id = req.comment_id
         commModel.post_id = req.post_id
         commModel.user_id = req.user_id
         commModel.body = req.body

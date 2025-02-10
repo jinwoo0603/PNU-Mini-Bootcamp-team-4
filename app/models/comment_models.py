@@ -13,7 +13,6 @@ class Comment(SQLModel, table=True):
 
 @dataclass
 class CreateCommReq:
-    comment_id: int
     post_id: int
     user_id: int
     body: str
