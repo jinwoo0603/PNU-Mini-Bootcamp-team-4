@@ -23,7 +23,10 @@ class PostService:
     def get_post(self,
                  db: Session,
                  post_id: int):
-        post = db.get(Post, post_id)
+        post = db.exec(
+            select(Post)
+            .where(Post.post_id == post_id)
+        ).first()
         if not post:
             return RESULT_CODE.NOT_FOUND 
         return post
@@ -60,7 +63,10 @@ class PostService:
                     db:Session, 
                     post_id: int,
                     req: UpdatePostReq) -> tuple[Post|None,RESULT_CODE]:
-        oldPost = db.get(Post, post_id)
+        oldPost = db.exec(
+            select(Post)
+            .where(Post.post_id == post_id)
+        ).first()
         if not oldPost:
             return (None, RESULT_CODE.NOT_FOUND)
         
@@ -77,7 +83,10 @@ class PostService:
     def delete_post(self,
                     db: Session,
                     post_id: int) -> RESULT_CODE:
-        post = db.get(Post, post_id)
+        post = db.exec(
+            select(Post)
+            .where(Post.post_id == post_id)
+        ).first()
         if not post:
             return RESULT_CODE.NOT_FOUND 
         try:

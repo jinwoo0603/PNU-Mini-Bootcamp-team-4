@@ -36,6 +36,10 @@ class CommentService:
                     comment_id: int,
                     req: UpdateCommReq) -> tuple[Comment|None,RESULT_CODE]:
         oldComm = db.get(Comment, comment_id)
+        oldComm = db.exec(
+            select(Comment)
+            .where(Comment.comment_id == comment_id)
+        ).first()
         if not oldComm:
             return (None, RESULT_CODE.NOT_FOUND)
         
@@ -52,7 +56,10 @@ class CommentService:
     def delete_comment(self,
                     db: Session,
                     comment_id: int) -> RESULT_CODE:
-        comment = db.get(Comment, comment_id)
+        comment = db.exec(
+            select(Comment)
+            .where(Comment.comment_id == comment_id)
+        ).first()
         if not comment:
             return RESULT_CODE.NOT_FOUND 
         try:
