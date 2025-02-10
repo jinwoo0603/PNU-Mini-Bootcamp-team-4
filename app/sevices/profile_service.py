@@ -1,6 +1,6 @@
-from app.models.profile import *
 from sqlmodel import Session, select
 from fastapi import HTTPException
+from app.models.profile_models import *
 
 class ProfileService():
     def __init__(self, db: Session):
