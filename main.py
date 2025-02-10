@@ -7,6 +7,6 @@ from app.routers import profile_handler
 async def lifespan(app: FastAPI):
     create_db()
     yield
-
+#hello world
 app = FastAPI(lifespan=lifespan)
 app.include_router(profile_handler.router)
