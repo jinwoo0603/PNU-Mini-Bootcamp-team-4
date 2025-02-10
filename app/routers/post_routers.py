@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
-from ..dependencies.db import get_db_session
-from ..models.post_models import *
-from ..sevices.post_service import PostService
+from app.dependencies.db import get_db_session
+from app.models.post_models import *
+from app.sevices.post_service import PostService
 
 router = APIRouter(
     prefix='/v1/post'

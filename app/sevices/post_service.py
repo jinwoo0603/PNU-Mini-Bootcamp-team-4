@@ -3,8 +3,8 @@ from sqlmodel import (
     Session, select
 )
 import time
-from ..models.post_models import *
-from ..models.utils import RESULT_CODE
+from app.models.post_models import *
+from app.models.utils import RESULT_CODE
 
 class PostService:
     def get_filtered_posts(self,

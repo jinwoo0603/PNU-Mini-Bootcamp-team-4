@@ -3,8 +3,8 @@ from sqlmodel import (
     Session, select
 )
 import time
-from ..models.comment_models import *
-from ..models.utils import RESULT_CODE
+from app.models.comment_models import *
+from app.models.utils import RESULT_CODE
 
 class CommentService:
     def get_comment(self,

@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
-from ..dependencies.db import get_db_session
-from ..models.comment_models import *
-from ..sevices.comment_service import CommentService
+from app.dependencies.db import get_db_session
+from app.models.comment_models import *
+from app.sevices.comment_service import CommentService
 
 router = APIRouter(
     prefix='/v1/comment'
