@@ -45,3 +45,13 @@ def delete_post(post_id: int,
                 postService: PostService = Depends()):
     return postService.delete_post(db=db,
                                    post_id=post_id)
+
+# 좋아요 기능 초안
+@router.put('/{post_id}/like')
+def like(post_id: int,
+         like_op: LIKE_OPTION,
+         db=Depends(get_db_session),
+         postService: PostService = Depends()):
+    return postService.like(db=db,
+                            post_id=post_id,
+                            like_op=like_op)

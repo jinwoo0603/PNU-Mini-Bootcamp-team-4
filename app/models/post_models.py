@@ -3,6 +3,10 @@ from typing import Optional
 from dataclasses import dataclass
 from sqlmodel import Field, SQLModel
 
+class LIKE_OPTION(Enum):
+    LIKE = 1
+    DISLIKE = -1
+
 class Post(SQLModel, table=True):
     post_id: int | None = Field(default=None, primary_key=True)
     user_id: int = Field(index=True)
@@ -10,6 +14,7 @@ class Post(SQLModel, table=True):
     body: str
     created_at: int | None = Field(index=True)
     published: bool = Field(index=True)
+    likes: int
 
 @dataclass
 class CreatePostReq:

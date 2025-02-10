@@ -54,6 +54,7 @@ class PostService:
         postModel.body = req.body
         postModel.created_at = int(time.time())
         postModel.published = req.published
+        postModel.likes = 0
         db.add(postModel)
         db.commit()
         db.refresh(postModel)
@@ -88,10 +89,30 @@ class PostService:
             .where(Post.post_id == post_id)
         ).first()
         if not post:
-            return RESULT_CODE.NOT_FOUND 
+            return RESULT_CODE.NOT_FOUND
         try:
             db.delete(post)
             db.commit()
         except:
             return RESULT_CODE.FAILED
         return RESULT_CODE.SUCCESS
+    
+    def like(self,
+             db: Session,
+             post_id: int,
+             like_op: LIKE_OPTION):
+        post = db.exec(
+            select(Post)
+            .where(Post.post_id == post_id)
+        ).first()
+        if not post:
+            return RESULT_CODE.NOT_FOUND
+        try:
+            post.likes = post.likes + like_op
+            db.add(post)
+            db.commit()
+            db.refresh(post)
+        except:
+            return RESULT_CODE.FAILED
+        return RESULT_CODE.SUCCESS
+    
