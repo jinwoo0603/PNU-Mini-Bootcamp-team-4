@@ -4,6 +4,7 @@ from contextlib import asynccontextmanager
 from app.routers import profile_handler
 from app.routers import post_routers
 from app.routers import comment_routers
+from app.routers import auth_handler
 from fastapi.middleware.cors import CORSMiddleware
 
 @asynccontextmanager
@@ -15,6 +16,7 @@ app = FastAPI(lifespan=lifespan)
 app.include_router(profile_handler.router)
 app.include_router(post_routers.router)
 app.include_router(comment_routers.router)
+app.include_router(auth_handler.router)
 
 app.add_middleware(
     CORSMiddleware,
