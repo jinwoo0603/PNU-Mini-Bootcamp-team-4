@@ -14,11 +14,11 @@ def get_comment(post_id: int,
     return commService.get_comment(db=db,
                                    post_id=post_id)
 
-@router.post('/')
-def create_comment(req: CreateCommReq,
+@router.post('/{post_id}')
+def create_comment(req: CreateCommReq, post_id:int,
                    db=Depends(get_db_session),
                    commService: CommentService = Depends()):
-    return commService.create_comment(db=db,
+    return commService.create_comment(db=db,post_id=post_id,
                                       req=req)
 
 @router.put('/{comment_id}')
