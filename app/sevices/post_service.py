@@ -118,14 +118,16 @@ class PostService:
             return RESULT_CODE.FAILED
         return RESULT_CODE.SUCCESS
     
-    def save_files(post_id: int,
+    def save_files(self,
+                   post_id: int,
                    file_db: Session,
                    files: dict[str, bytes]):
         fileModels = []
+        
         for filename in files:
             fileData = files[filename]
             
-            strPath = os.path.join('files', str(post_id) + "-" + filename)
+            strPath = os.path.join('app\\files', str(post_id) + "_" + filename)
             try:
                 with open(strPath, 'wb') as f:
                     f.write(fileData)
@@ -138,7 +140,8 @@ class PostService:
             fileModel.created_at = int(time.time())
             file_db.add(fileModel)  
             fileModels.append(fileModel)
-        file_db.commit()
-        file_db.refresh(fileModel)
+            file_db.commit()
+            file_db.refresh(fileModel)
+        
         return fileModels
     
