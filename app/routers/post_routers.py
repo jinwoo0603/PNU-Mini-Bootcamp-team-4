@@ -3,6 +3,8 @@ from app.dependencies.db import get_db_session
 from app.dependencies.file_db import get_files_session
 from app.models.post_models import *
 from app.sevices.post_service import PostService
+from app.sevices.file_service import FileService
+from app.models.utils import RESULT_CODE
 
 router = APIRouter(
     prefix='/v1/post'
@@ -43,7 +45,11 @@ def update_post(post_id: int,
 @router.delete('/{post_id}')
 def delete_post(post_id: int,
                 db=Depends(get_db_session),
-                postService: PostService = Depends()):
+                file_db=Depends(get_files_session),
+                postService: PostService = Depends(),
+                fileService: FileService = Depends()):
+    fileService.delete_files(post_id=post_id,
+                                file_db=file_db)
     return postService.delete_post(db=db,
                                    post_id=post_id)
 
@@ -60,9 +66,15 @@ def like(post_id: int,
 def upload_files(post_id: int,
                  files: list[UploadFile] | None = None,
                  file_db=Depends(get_files_session),
-                 postService: PostService = Depends()):
-    fileDict: dict[str, bytes] = {file.filename:file.file.read() for file in files if len(file.filename) > 0}
-    
-    return postService.save_files(post_id=post_id,
+                 fileService: FileService = Depends()):
+    fileDict: dict[str, bytes] = { file.filename:file.file.read() for file in files if len(file.filename) > 0 }
+    return fileService.save_files(post_id=post_id,
                                   file_db=file_db,
                                   files=fileDict)
+
+@router.get('/{post_id}/files')
+def get_files(post_id: int,
+              file_db=Depends(get_files_session),
+              fileService: FileService = Depends()):
+    return fileService.get_files(post_id=post_id,
+                                 file_db=file_db)

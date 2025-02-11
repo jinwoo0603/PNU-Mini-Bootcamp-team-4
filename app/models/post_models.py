@@ -11,7 +11,7 @@ class LikeOp(IntEnum):
 class Files(SQLModel, table=True):
     file_id: int | None = Field(index=True, primary_key=True)
     post_id: int = Field(index=True)
-    urls: str
+    url: str
     created_at: int | None = Field(index=True)
 
 class Post(SQLModel, table=True):
