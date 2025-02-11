@@ -18,6 +18,7 @@ class CreateProfileReq(BaseModel):
 class Profile(SQLModel, table = True):
     user_id: int = Field(primary_key=True)
     username: str
+    profile_pic_path: str
     bio: Optional[str] = None
     published: bool = Field(index=True)
 

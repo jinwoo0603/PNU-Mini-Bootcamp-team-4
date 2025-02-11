@@ -38,7 +38,7 @@ class FriendService():
             .limit(limit)).all()
         if not followings:
             raise HTTPException(status_code=404, detail="Followers not found")
-        #from_user_id 들의 프로필을 get
+        #from_user_id 들의 *프로필*을 get
         return followings
     
     def delete_follow(self, req: FollowReq):
