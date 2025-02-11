@@ -1,11 +1,11 @@
 from enum import Enum
-from typing import Optional
+from typing import Optional, Literal
+from pydantic import BaseModel
 from dataclasses import dataclass
 from sqlmodel import Field, SQLModel
 
-class LIKE_OPTION(Enum):
-    LIKE = "1"
-    DISLIKE = "-1"
+class LikeOp(BaseModel):
+    like_op: Literal["-1", "1"] 
 
 class Post(SQLModel, table=True):
     post_id: int | None = Field(default=None, primary_key=True)

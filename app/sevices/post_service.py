@@ -100,7 +100,7 @@ class PostService:
     def like(self,
              db: Session,
              post_id: int,
-             like_op: LIKE_OPTION):
+             like_op: LikeOp):
         post = db.exec(
             select(Post)
             .where(Post.post_id == post_id)
@@ -108,7 +108,7 @@ class PostService:
         if not post:
             return RESULT_CODE.NOT_FOUND
         try:
-            post.likes = post.likes + int(like_op.value)
+            post.likes = post.likes + int(like_op.like_op)
             db.add(post)
             db.commit()
             db.refresh(post)
