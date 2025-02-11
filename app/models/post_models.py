@@ -8,6 +8,12 @@ class LikeOp(IntEnum):
     LIKE = 1
     DISLIKE = -1
 
+class Files(SQLModel, table=True):
+    file_id: int | None = Field(index=True, primary_key=True)
+    post_id: int = Field(index=True)
+    urls: str
+    created_at: int | None = Field(index=True)
+
 class Post(SQLModel, table=True):
     post_id: int | None = Field(default=None, primary_key=True)
     user_id: int = Field(index=True)

@@ -3,6 +3,7 @@ from sqlmodel import (
     Session, select
 )
 import time
+import os
 from app.models.post_models import *
 from app.models.utils import RESULT_CODE
 
@@ -116,4 +117,28 @@ class PostService:
         except:
             return RESULT_CODE.FAILED
         return RESULT_CODE.SUCCESS
+    
+    def save_files(post_id: int,
+                   file_db: Session,
+                   files: dict[str, bytes]):
+        fileModels = []
+        for filename in files:
+            fileData = files[filename]
+            
+            strPath = os.path.join('files', str(post_id) + "-" + filename)
+            try:
+                with open(strPath, 'wb') as f:
+                    f.write(fileData)
+            except Exception as e:
+                print(e)
+                continue
+            fileModel = Files()
+            fileModel.post_id = post_id
+            fileModel.urls = strPath
+            fileModel.created_at = int(time.time())
+            file_db.add(fileModel)  
+            fileModels.append(fileModel)
+        file_db.commit()
+        file_db.refresh(fileModel)
+        return fileModels
     

@@ -1,5 +1,6 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, UploadFile, BackgroundTasks, Depends
 from app.dependencies.db import get_db_session
+from app.dependencies.file_db import get_files_session
 from app.models.post_models import *
 from app.sevices.post_service import PostService
 
@@ -55,3 +56,14 @@ def like(post_id: int,
     return postService.like(db=db,
                             post_id=post_id,
                             like_op=like_op)
+
+@router.post('/{post_id}/upload')
+def upload_files(post_id: int,
+                 files: list[UploadFile] | None = None,
+                 file_db=Depends(get_files_session),
+                 postService: PostService = Depends()):
+    fileDict: dict[str, bytes] = {file.filename:file.file.read() for file in files if len(file.filename) > 0}
+    
+    return postService.save_files(post_id=post_id,
+                                  file_db=file_db,
+                                  files=fileDict)
