@@ -71,13 +71,14 @@ class PostService:
         if not oldPost:
             return (None, RESULT_CODE.NOT_FOUND)
         
-        dictToUpdate = asdict(req)
+        dictToUpdate = req.model_dump(exclude_unset=True)
         oldPost.sqlmodel_update(dictToUpdate)
         try:
             db.add(oldPost)
             db.commit()
             db.refresh(oldPost)
-        except:
+        except Exception as e:
+            print(e)
             return (None, RESULT_CODE.FAILED)
         return (oldPost, RESULT_CODE.SUCCESS)
 

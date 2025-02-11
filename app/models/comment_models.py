@@ -13,7 +13,6 @@ class Comment(SQLModel, table=True):
 
 @dataclass
 class CreateCommReq:
-    post_id: int
     user_id: int
     body: str
     published: bool = False

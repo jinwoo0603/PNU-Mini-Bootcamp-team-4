@@ -17,10 +17,11 @@ class CommentService:
         return comments
     
     def create_comment(self,
+                    post_id:int,
                     db:Session,
                     req: CreateCommReq):
         commModel = Comment()
-        commModel.post_id = req.post_id
+        commModel.post_id = post_id
         commModel.user_id = req.user_id
         commModel.body = req.body
         commModel.created_at = int(time.time())

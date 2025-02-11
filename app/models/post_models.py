@@ -1,6 +1,7 @@
 from enum import Enum
 from typing import Optional
 from dataclasses import dataclass
+from pydantic import BaseModel
 from sqlmodel import Field, SQLModel
 
 class LIKE_OPTION(Enum):
@@ -23,8 +24,7 @@ class CreatePostReq:
     body: str
     published: bool = False
 
-@dataclass
-class UpdatePostReq:
+class UpdatePostReq(BaseModel):
     title: Optional[str] = None
     body: Optional[str] = None
-    published: Optional[bool] = False
+    published: Optional[bool] = None
