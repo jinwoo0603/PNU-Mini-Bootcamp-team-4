@@ -12,8 +12,10 @@ class CreateProfileReq(BaseModel):
     bio: Optional[str] = None
     published: bool = Field(index=True)
 
-# class ProfileResp(BaseModel):
-#     pass
+class UpdateProfileReq(BaseModel):
+    username: Optional[str] = None
+    bio: Optional[str] = None
+    published: Optional[bool] = None
 
 class Profile(SQLModel, table = True):
     user_id: int | None = Field(default=None, primary_key=True)

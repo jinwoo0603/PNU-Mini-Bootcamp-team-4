@@ -37,7 +37,7 @@ class ProfileService():
         self.db.refresh(db_profile)
         return db_profile
     
-    def update_profile(self, user_id:int, req: CreateProfileReq):
+    def update_profile(self, user_id:int, req: UpdateProfileReq):
         oldProfile = self.db.exec(select(Profile).where(Profile.user_id == user_id)).first()
         if not oldProfile:
             raise HTTPException(status_code=404, detail="Profile not found")
