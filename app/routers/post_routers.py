@@ -63,18 +63,21 @@ def like(post_id: int,
                             like_op=like_op)
 
 @router.post('/{post_id}/upload')
-def upload_files(post_id: int,
-                 files: list[UploadFile] | None = None,
-                 file_db=Depends(get_files_session),
-                 fileService: FileService = Depends()):
-    fileDict: dict[str, bytes] = { file.filename:file.file.read() for file in files if len(file.filename) > 0 }
-    return fileService.save_files(post_id=post_id,
-                                  file_db=file_db,
-                                  files=fileDict)
+def upload_file(post_id: int,
+                file: UploadFile,
+                file_db=Depends(get_files_session),
+                fileService: FileService = Depends()):
+    if not file or len(file.filename) == 0:
+        return {"error": "No file provided"}
+    
+    file_data = file.file.read()
+    return fileService.save_file(post_id=post_id,
+                                 file_db=file_db,
+                                 file_name=file.filename,
+                                 file_data=file_data)
 
 @router.get('/{post_id}/files')
 def get_files(post_id: int,
               file_db=Depends(get_files_session),
               fileService: FileService = Depends()):
-    return fileService.get_files(post_id=post_id,
-                                 file_db=file_db)
+    return fileService.get_files(post_id=post_id, file_db=file_db)
