@@ -80,5 +80,4 @@ def upload_file(post_id: int,
 def get_files(post_id: int,
               file_db=Depends(get_files_session),
               fileService: FileService = Depends()):
-    return fileService.get_files(post_id=post_id,
-                                 file_db=file_db)
+    return fileService.get_files(post_id=post_id, file_db=file_db)
