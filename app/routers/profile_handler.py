@@ -9,9 +9,11 @@ os.makedirs(PROFILE_PIC_DIR, exist_ok=True)
 
 router = APIRouter(prefix='/v1/profile')
 
-@router.get('/{user_id}')
-def get_profiles(user_id:str, db:Session = Depends(get_db_session)):
+@router.get('/')
+def get_profiles(user_id: int = None, db:Session = Depends(get_db_session)):
     profileService = ProfileService(db)
+    if not user_id:
+        return profileService.get_profiles_test()
     return profileService.get_profile(user_id)
 
 @router.post('')
