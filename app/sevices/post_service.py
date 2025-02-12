@@ -11,9 +11,9 @@ class PostService:
     def get_filtered_posts(self,
                            db: Session,
                            user_id: int,
-                           limit:int=10):
-        if limit > 10:
-            limit = 10
+                           limit:int=20):
+        if limit > 20:
+            limit = 20
         posts = db.exec(
             select(Post)
             .filter(Post.user_id == user_id)
@@ -33,11 +33,11 @@ class PostService:
         return post
 
     def get_posts(self,
-                  db: Session,
-                  page: int=1,
-                  limit:int=10):
-        if limit > 10:
-            limit = 10
+                  page: int,
+                  limit:int,
+                  db: Session):
+        if limit > 20:
+            limit = 20
         nOffset = (page-1) * limit
         posts = db.exec(
             select(Post)
