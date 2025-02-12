@@ -23,7 +23,7 @@ def create_profile(profile:CreateProfileReq, db:Session = Depends(get_db_session
     return profileService.create_profile(profile)
 
 @router.patch('/{profile_id}')
-def update_profile(user_id:int, profile:CreateProfileReq, db:Session = Depends(get_db_session)):
+def update_profile(user_id:int, profile:UpdateProfileReq, db:Session = Depends(get_db_session)):
     profileService = ProfileService(db)
     return profileService.update_profile(user_id, profile)
 
