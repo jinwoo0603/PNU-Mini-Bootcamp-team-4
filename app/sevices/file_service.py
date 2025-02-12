@@ -28,16 +28,16 @@ class FileService():
         
         return fileModel
     
-    def get_files(self,
+    def get_file(self,
                   post_id: int,
                   file_db: Session):
-        files = file_db.exec(
+        file = file_db.exec(
             select(Files)
             .filter(Files.post_id == post_id)
-        ).all()
+        ).first()
 
         # NOTE: 배포시 클라이언트가 접근 가능한 경로로 전처리하도록 수정
-        return [file.url for file in files]
+        return file.url
     
     def delete_files(self,
                      post_id: int,
