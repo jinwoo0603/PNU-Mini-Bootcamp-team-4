@@ -2,6 +2,7 @@ from sqlmodel import Session, create_engine, SQLModel
 from dotenv import load_dotenv
 import redis
 
+
 load_dotenv()
 
 #db_url = os.getenv('DB_URL')

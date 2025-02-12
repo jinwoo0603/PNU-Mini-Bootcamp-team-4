@@ -3,8 +3,6 @@ from fastapi import HTTPException
 from app.models.friend_model import *
 from app.sevices.profile_service import ProfileService
 
-#TODO: 팔로우/팔로워의 아이디 뿐만이 아닌 프로필을 보이기
-
 class FriendService():
     def __init__(self, db: Session):
         self.db = db
