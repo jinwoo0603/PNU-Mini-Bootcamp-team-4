@@ -1,6 +1,7 @@
 from sqlmodel import (
     Session, select
 )
+from fastapi.responses import FileResponse
 import time
 import os
 from app.models.post_models import *
@@ -36,8 +37,10 @@ class FileService():
             .filter(Files.post_id == post_id)
         ).first()
 
-        # NOTE: 배포시 클라이언트가 접근 가능한 경로로 전처리하도록 수정
-        return file.url
+        if file:
+            return FileResponse(file.url)
+        else:
+            return ""
     
     def delete_files(self,
                      post_id: int,
