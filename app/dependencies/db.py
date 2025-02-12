@@ -1,6 +1,6 @@
 from sqlmodel import Session, create_engine, SQLModel
-import os
 from dotenv import load_dotenv
+from app.models import post_models, profile_model, friend_model
 
 load_dotenv()
 
