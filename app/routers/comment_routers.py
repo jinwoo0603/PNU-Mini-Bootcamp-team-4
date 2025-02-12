@@ -7,7 +7,7 @@ router = APIRouter(
     prefix='/v1/comment'
 )
 
-@router.get('/')
+@router.get('/{post_id}')
 def get_comment(post_id: int,
                 db=Depends(get_db_session),
                 commService: CommentService = Depends()):
