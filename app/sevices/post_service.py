@@ -6,7 +6,7 @@ import time
 import os
 from app.models.post_models import *
 from app.models.utils import RESULT_CODE
-
+from app.models.user_model import User
 class PostService:
     def get_filtered_posts(self,
                            db: Session,

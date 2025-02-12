@@ -5,7 +5,8 @@ from fastapi import APIRouter, Depends, HTTPException, Header
 from typing import Annotated
 
 from app.models.parameter_model import AuthSignupReq, AuthSigninReq
-from app.dependencies.db import get_db_session, get_redis
+from app.dependencies.db import get_db_session
+from app.dependencies.redis_db import *
 from app.dependencies.jwt_db import JWTUtil
 from app.sevices.auth_service import AuthService
 
@@ -24,8 +25,8 @@ def auth_signup(req: AuthSignupReq,
         raise HTTPException(status_code=400, detail="ERROR")
     user.access_token = jwtUtil.create_token(user.model_dump())
     
-    # 
-    #redis_key = f"user:{user.id}"
+    
+    save_token(user.id, user.access_token)
     
     return user
 
