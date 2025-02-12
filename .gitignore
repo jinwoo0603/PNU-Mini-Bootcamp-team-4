@@ -1,4 +1,9 @@
 .env
+test.py
+/__pycache__
+/app/dependencies/__pycache__
+/app/models/__pycache__
+/app/routers/__pycache__
+/app/sevices/__pycache__
+db.db
 env
-*.pyc
-__pycache__/
