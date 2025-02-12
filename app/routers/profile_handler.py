@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, UploadFile, File
+from fastapi.responses import FileResponse
 from app.sevices.profile_service import *
 from app.dependencies.db import get_db_session
 import shutil
@@ -49,4 +50,4 @@ def get_profile_pic(user_id: int, db: Session = Depends(get_db_session)):
     profile = db.exec(select(Profile).where(Profile.user_id == user_id)).first()
     if not profile or not profile.profile_pic_path:
         raise HTTPException(status_code=404, detail="Profile picture not found")
-    return {"profile_pic_path": profile.profile_pic_path}
+    return FileResponse(profile.profile_pic_path)
