@@ -1,4 +1,5 @@
 from fastapi import APIRouter, UploadFile, BackgroundTasks, Depends
+from fastapi.responses import FileResponse
 from app.dependencies.db import get_db_session
 from app.dependencies.file_db import get_files_session
 from app.models.post_models import *
@@ -76,5 +77,5 @@ def upload_files(post_id: int,
 def get_files(post_id: int,
               file_db=Depends(get_files_session),
               fileService: FileService = Depends()):
-    return fileService.get_files(post_id=post_id,
-                                 file_db=file_db)
+    return FileResponse(fileService.get_files(post_id=post_id,
+                                 file_db=file_db)[0])
