@@ -16,7 +16,7 @@ class CreateProfileReq(BaseModel):
 #     pass
 
 class Profile(SQLModel, table = True):
-    user_id: int = Field(primary_key=True)
+    user_id: int | None = Field(default=None, primary_key=True)
     username: str
     profile_pic_path: Optional[str] = None
     bio: Optional[str] = None

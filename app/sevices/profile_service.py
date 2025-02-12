@@ -3,6 +3,8 @@ from fastapi import HTTPException
 from app.models.profile_model import *
 import os
 
+#User_id 안넣으면 전부 다뜨게
+
 class ProfileService():
     def __init__(self, db: Session):
         self.db = db
@@ -20,6 +22,13 @@ class ProfileService():
         nOffset = (page-1) * limit
         profiles = self.db.exec(select(Profile).where(Profile.id.in_(users))
                                 .offset(nOffset).limit(limit)).all()
+        return profiles
+    
+    def get_profiles_test(self, page: int = 1, limit: int = 10):
+        if limit > 10:
+            limit = 10
+        nOffset = (page-1) * limit
+        profiles = self.db.exec(select(Profile).offset(nOffset).limit(limit)).all()
         return profiles
 
     def create_profile(self, profile_data:CreateProfileReq):
