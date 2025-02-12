@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from app.dependencies.db import create_db
 from contextlib import asynccontextmanager
-from app.routers import profile_handler
+from app.routers import profile_handler, friend_handler
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -10,3 +10,4 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 app.include_router(profile_handler.router)
+app.include_router(friend_handler.router)
