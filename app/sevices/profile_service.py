@@ -2,8 +2,7 @@ from sqlmodel import Session, select
 from fastapi import HTTPException
 from app.models.profile_model import *
 import os
-
-#User_id 안넣으면 전부 다뜨게
+from app.models.utils import RESULT_CODE
 
 class ProfileService():
     def __init__(self, db: Session):
@@ -38,15 +37,20 @@ class ProfileService():
         self.db.refresh(db_profile)
         return db_profile
     
-    def update_profile(self, user_id:int, profile_data: CreateProfileReq):
-        profile = self.db.exec(select(Profile).where(Profile.user_id == user_id)).first()
-        if not profile:
+    def update_profile(self, user_id:int, req: CreateProfileReq):
+        oldProfile = self.db.exec(select(Profile).where(Profile.user_id == user_id)).first()
+        if not oldProfile:
             raise HTTPException(status_code=404, detail="Profile not found")
-        for key, value in profile_data.model_dump().items():
-            setattr(profile, key, value)
-        self.db.commit()
-        self.db.refresh(profile)
-        return profile
+        dictToUpdate = req.model_dump(exclude_unset=True)
+        oldProfile.sqlmodel_update(dictToUpdate)
+        try:
+            self.db.add(oldProfile)
+            self.db.commit()
+            self.db.refresh(oldProfile)
+        except Exception as e:
+            print(e)
+            return (None, RESULT_CODE.FAILED)
+        return (oldProfile, RESULT_CODE.SUCCESS)
 
     def delete_profile(self, user_id:int):
         profile = self.db.exec(select(Profile).where(Profile.user_id == user_id)).first()
