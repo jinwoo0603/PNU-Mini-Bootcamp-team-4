@@ -7,32 +7,26 @@ from app.models.post_models import *
 from app.models.utils import RESULT_CODE
 
 class FileService():
-    def save_files(self,
-                   post_id: int,
-                   file_db: Session,
-                   files: dict[str, bytes]):
-        fileModels = []
-
-        for filename in files:
-            fileData = files[filename]
-            
-            strPath = os.path.join('app\\files', str(post_id) + "_" + filename)
-            try:
-                with open(strPath, 'wb') as f:
-                    f.write(fileData)
-            except Exception as e:
-                print(e)
-                continue
-            fileModel = Files()
-            fileModel.post_id = post_id
-            fileModel.url = strPath
-            fileModel.created_at = int(time.time())
-            file_db.add(fileModel)  
-            fileModels.append(fileModel)
-            file_db.commit()
-            file_db.refresh(fileModel)
+    def save_file(self, post_id: int, file_db: Session, file_name: str, file_data: bytes):
+        strPath = os.path.join('app', 'files', f"{post_id}_{file_name}")
         
-        return fileModels
+        try:
+            with open(strPath, 'wb') as f:
+                f.write(file_data)
+        except Exception as e:
+            print(e)
+            return None
+        
+        fileModel = Files()
+        fileModel.post_id = post_id
+        fileModel.url = strPath
+        fileModel.created_at = int(time.time())
+        
+        file_db.add(fileModel)
+        file_db.commit()
+        file_db.refresh(fileModel)
+        
+        return fileModel
     
     def get_files(self,
                   post_id: int,
