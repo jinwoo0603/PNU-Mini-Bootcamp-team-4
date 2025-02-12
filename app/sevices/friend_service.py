@@ -1,6 +1,7 @@
 from sqlmodel import Session, select
 from fastapi import HTTPException
 from app.models.friend_model import *
+from app.sevices.profile_service import ProfileService
 
 #TODO: 팔로우/팔로워의 아이디 뿐만이 아닌 프로필을 보이기
 
@@ -23,23 +24,23 @@ class FriendService():
         if limit > 10:
             limit = 10
         nOffset = (page-1) * limit
-        followers = self.db.exec(select(Follow).where(Follow.friend_id == user_id).offset(nOffset)
+        followers = self.db.exec(select(Follow.user_id).where(Follow.friend_id == user_id).offset(nOffset)
             .limit(limit)).all()
         if not followers:
             raise HTTPException(status_code=404, detail="Followers not found")
         #to_user_id 들의 프로필을 get
-        return followers
+        return ProfileService.get_profiles(self, followers, page, limit)
 
     def get_followings(self, user_id: int, page: int = 1, limit: int = 10):
         if limit > 10:
             limit = 10
         nOffset = (page-1) * limit
-        followings = self.db.exec(select(Follow).where(Follow.user_id == user_id).offset(nOffset)
+        followings = self.db.exec(select(Follow.friend_id).where(Follow.user_id == user_id).offset(nOffset)
             .limit(limit)).all()
         if not followings:
             raise HTTPException(status_code=404, detail="Followers not found")
         #from_user_id 들의 프로필을 get
-        return followings
+        return ProfileService.get_profiles(self, followings, page, limit)
     
     def delete_follow(self, req: FollowReq):
         #TODO: delete from table
