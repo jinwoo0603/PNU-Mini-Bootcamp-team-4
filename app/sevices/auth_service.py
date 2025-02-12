@@ -58,13 +58,3 @@ class AuthService:
 
         return dbUser
         
-
-# python app\serivces\auth_services.py
-if __name__ == '__main__':
-    authService = AuthService()
-    hashedPwd = authService.get_hashed_pwd('1234')
-    print(hashedPwd)
-    # hashedPwd -> DB
-
-    bRet = authService.verify_pwd('1234', hashedPwd)
-    print(bRet)

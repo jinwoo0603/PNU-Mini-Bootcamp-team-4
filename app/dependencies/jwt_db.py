@@ -38,16 +38,4 @@ class JWTUtil:
             pass
         return None
 
-if __name__ == '__main__':
-    payload = {
-        'id': 1,
-        'name': 'Linux',
-        "login_id": "loiss"
-    }
 
-    jwtUtil = JWTUtil()
-    token = jwtUtil.create_token(payload=payload, expires_delta=timedelta(minutes=5))
-    print(token)
-
-    payload2 = jwtUtil.decode_token(token)
-    print(payload2)

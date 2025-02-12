@@ -2,7 +2,6 @@
 
 from fastapi import APIRouter, Depends, HTTPException, Header
 from typing import Annotated
-import time
 
 from app.models.parameter_model import AuthSignupReq, AuthSigninReq
 from app.dependencies.db import get_db_session
