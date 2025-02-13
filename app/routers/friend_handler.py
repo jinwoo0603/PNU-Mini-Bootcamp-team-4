@@ -11,15 +11,15 @@ def follow(req:FollowReq, db:Session = Depends(get_db_session)):
     friendService = FriendService(db)
     return friendService.follow(req)
 
-@router.get('/{user_id}/followers')
-def get_followers(user_id:str, db:Session = Depends(get_db_session)):
-    friendService = FriendService(db)
-    return friendService.get_followers(user_id)
+# @router.get('/{user_id}/followers')
+# def get_followers(user_id:str, db:Session = Depends(get_db_session)):
+#     friendService = FriendService(db)
+#     return friendService.get_followers(user_id)
 
 @router.get('/{user_id}/followings')
-def get_followings(user_id:str, db:Session = Depends(get_db_session)):
+def get_friends(user_id:str, db:Session = Depends(get_db_session)):
     friendService = FriendService(db)
-    return friendService.get_followings(user_id)
+    return friendService.get_friends(user_id)
 
 @router.delete('/{profile_id}')
 def delete_follow(req:FollowReq, db:Session = Depends(get_db_session)):
