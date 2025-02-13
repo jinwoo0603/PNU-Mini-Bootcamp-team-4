@@ -1,4 +1,5 @@
 from sqlmodel import Session, select
+from sqlalchemy import and_
 from fastapi import HTTPException
 from app.models.friend_model import *
 from app.sevices.profile_service import ProfileService
@@ -42,8 +43,8 @@ class FriendService():
     
     def delete_follow(self, req: FollowReq):
         follow = self.db.exec(select(Follow)
-                     .where(Follow.user_id == req.user_id
-                            and Follow.friend_id == req.friend_id)
+                     .where(and_(Follow.user_id == req.user_id
+                            , Follow.friend_id == req.friend_id))
                             ).first()
         if not follow:
             raise HTTPException(status_code=404, detail="Follow not found")
