@@ -1,4 +1,4 @@
-from sqlmodel import Session, select
+from sqlmodel import Session, select, col
 from fastapi import HTTPException
 from app.models.profile_model import *
 import os
@@ -19,7 +19,7 @@ class ProfileService():
         if limit > 10:
             limit = 10
         nOffset = (page-1) * limit
-        profiles = self.db.exec(select(Profile).where(Profile.id.in_(users))
+        profiles = self.db.exec(select(Profile).where(col(Profile.user_id).in_(users))
                                 .offset(nOffset).limit(limit)).all()
         return profiles
     
