@@ -17,19 +17,19 @@ class FriendService():
         self.db.refresh(friendModel)
         return friendModel
     
-    def get_followers(self, user_id: int, page: int = 1, limit: int = 10):
-        #나를 팔로우하는 사람의 프로필을 보이기
-        if limit > 10:
-            limit = 10
-        nOffset = (page-1) * limit
-        followers = self.db.exec(select(Follow.user_id).where(Follow.friend_id == user_id).offset(nOffset)
-            .limit(limit)).all()
-        if not followers:
-            raise HTTPException(status_code=404, detail="Followers not found")
-        #to_user_id 들의 프로필을 get
-        return ProfileService.get_profiles(self, followers, page, limit)
+    # def get_followers(self, user_id: int, page: int = 1, limit: int = 10):
+    #     #나를 팔로우하는 사람의 프로필을 보이기
+    #     if limit > 10:
+    #         limit = 10
+    #     nOffset = (page-1) * limit
+    #     followers = self.db.exec(select(Follow.user_id).where(Follow.friend_id == user_id).offset(nOffset)
+    #         .limit(limit)).all()
+    #     if not followers:
+    #         raise HTTPException(status_code=404, detail="Followers not found")
+    #     #to_user_id 들의 프로필을 get
+    #     return ProfileService.get_profiles(self, followers, page, limit)
 
-    def get_followings(self, user_id: int, page: int = 1, limit: int = 10):
+    def get_friends(self, user_id: int, page: int = 1, limit: int = 10):
         if limit > 10:
             limit = 10
         nOffset = (page-1) * limit
