@@ -8,9 +8,10 @@ from pydantic import BaseModel
 
 #Profile Request(input)
 class CreateProfileReq(BaseModel):
+    user_id: int
     username: str
     bio: Optional[str] = None
-    published: bool = Field(index=True)
+    published: bool
 
 class UpdateProfileReq(BaseModel):
     username: Optional[str] = None

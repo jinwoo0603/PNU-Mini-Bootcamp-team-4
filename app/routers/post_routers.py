@@ -20,18 +20,24 @@ def create_post(req: CreatePostReq,
 
 @router.get('/')
 def get_posts(post_id: int = None,
+              page: int = 1,
+              limit: int = 20,
               db=Depends(get_db_session),
               postService: PostService = Depends()):
     if post_id:
         return postService.get_post(db=db,
                                     post_id=post_id)
-    return postService.get_posts(db=db)
+    return postService.get_posts(page=page,
+                                 limit=limit,
+                                 db=db)
 
 @router.get('/filter')
 def get_filtered_post(user_id: int,
+                      limit: int = 20,
                       db=Depends(get_db_session),
                       postService: PostService = Depends()):
-    return postService.get_filtered_posts(db=db,
+    return postService.get_filtered_posts(limit=limit,
+                                          db=db,
                                           user_id=user_id)
 
 @router.patch('/{post_id}')

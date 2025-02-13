@@ -41,7 +41,6 @@ class FriendService():
         return ProfileService.get_profiles(self, followings, page, limit)
     
     def delete_follow(self, req: FollowReq):
-        #TODO: delete from table
         follow = self.db.exec(select(Follow)
                      .where(Follow.user_id == req.user_id
                             and Follow.friend_id == req.friend_id)
