@@ -8,12 +8,10 @@ from pydantic import BaseModel
 
 #Profile Request(input)
 class CreateProfileReq(BaseModel):
+    user_id: int
     username: str
     bio: Optional[str] = None
-    published: bool = Field(index=True)
-
-# class ProfileResp(BaseModel):
-#     pass
+    published: bool
 
 class Profile(SQLModel, table = True):
     user_id: int = Field(primary_key=True)
