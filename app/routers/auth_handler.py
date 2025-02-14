@@ -5,7 +5,8 @@ from fastapi import APIRouter, Depends, HTTPException, Header
 from typing import Annotated
 
 from app.models.parameter_model import AuthSignupReq, AuthSigninReq
-from app.dependencies.db import get_db_session, get_redis
+from app.dependencies.db import get_db_session
+from app.dependencies.redis_db import *
 from app.dependencies.jwt_db import JWTUtil
 from app.sevices.auth_service import AuthService
 
@@ -18,15 +19,21 @@ router = APIRouter(prefix='/auth')
 def auth_signup(req: AuthSignupReq,
                 db=Depends(get_db_session),
                 jwtUtil: JWTUtil=Depends(),
-                authService: AuthService=Depends()):
+                authService: AuthService=Depends(),
+                redisDB = Depends(get_redis)):
+
     user = authService.signup(db, req.login_id, req.pwd, req.name)
     if not user:
         raise HTTPException(status_code=400, detail="ERROR")
-    user.access_token = jwtUtil.create_token(user.model_dump())
     
-    # 
-    #redis_key = f"user:{user.id}"
-    
+
+    access_token = jwtUtil.create_token(user.model_dump())
+   
+    user.access_token = access_token
+
+    redis_key = f"user:{user.id}" 
+    redisDB.setex(redis_key, 3600, access_token)
+
     return user
 
 
@@ -35,17 +42,42 @@ def auth_signup(req: AuthSignupReq,
 def auth_signin(req: AuthSigninReq, 
                 db=Depends(get_db_session),
                 jwtUtil: JWTUtil=Depends(),
-                authService: AuthService=Depends()):
+                authService: AuthService=Depends(),
+                redisDB=Depends(get_redis)):
     user = authService.signin(db, req.login_id, req.pwd)
     if not user:
         raise HTTPException(status_code=401, detail="로그인 실패")
-    
 
-    user.access_token = jwtUtil.create_token(user.model_dump())
+    access_token = jwtUtil.create_token(user.model_dump())
+    user.access_token = access_token
 
-    #
+    redis_key = f"user:{user.id}" 
+    redisDB.setex(redis_key, 3600, access_token)
+
 
     return user
+
+
+
+# 3. signout
+@router.post('/signout')
+def auth_signout(Authorization: Annotated[str, Header()],
+                 jwtUtil: JWTUtil = Depends(),
+                 redisDB=Depends(get_redis)):
+    token = Authorization.replace('Bearer ', '')
+    userDict = jwtUtil.decode_token(token)
+
+    # 토큰이 유효하지 않으면 에러 반환
+    if userDict is None:
+        raise HTTPException(status_code=401, detail="Invalid Token")
+
+    nUserId = userDict.get('id', 0)
+
+    # Redis에서 해당 유저의 토큰 삭제
+    redis_key = f"user:{nUserId}"
+    redisDB.delete(redis_key)
+
+    return {"message": "Successfully signed out"}
 
 # /auth/me
 # {'name': 'linux'}
@@ -80,28 +112,3 @@ def get_me(Authorization: Annotated[str, Header()],
 
     return {'user': userDict, 'ret': ret}
 
-#  로그아웃 엔드포인트
-@router.post('/logout')
-def logout(Authorization: Annotated[str, Header()],
-           redis=Depends(get_redis),
-           jwtUtil: JWTUtil = Depends()):
-    
-    # 헤더에서 토큰 추출
-    token = Authorization.replace('Bearer ', '')
-    
-    # 토큰 검증
-    payload = jwtUtil.decode_token(token)
-    if not payload:
-        raise HTTPException(status_code=401, detail="유효하지 않은 토큰")
-
-    # 토큰 만료 시간 가져오기
-    exp_time = payload.get("exp", 0)
-    current_time = int(time.time())
-
-    if exp_time <= current_time:
-        raise HTTPException(status_code=401, detail="이미 만료된 토큰")
-
-    # Redis에 블랙리스트 추가 (TTL: exp - 현재 시간)
-    redis.setex(f"blacklist:{token}", exp_time - current_time, "true")
-
-    return {"message": "로그아웃 성공"}
