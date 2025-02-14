@@ -3,7 +3,7 @@ import bcrypt
 import time
 from sqlmodel import Session, select
 from app.models.user_model import User
-
+from fastapi import HTTPException 
 class AuthService:
     # 1. Password 단방향 암호화
     # 회원가입 -> password 암호화 -> DB
@@ -17,12 +17,22 @@ class AuthService:
     def verify_pwd(self, pwd: str, hpwd: str) -> bool:
         encoded_pwd = pwd.encode('utf-8')
         return bcrypt.checkpw(password=encoded_pwd,hashed_password=hpwd)
+    
+        # 3. 특정 login_id로 사용자 찾기
+    def get_user_by_name(self, db: Session, login_id: str) -> User | None:
+        stmt = select(User).where(User.login_id == login_id)
+        return db.exec(stmt).first()
 
     # 3. 회원가입때 DB 로직 구현
     # - 가입일시 만들어서 User.created_at
     # - (1) Password 암호화 함수를 이용하여 암호화된 패스워드 -> User.pwd
     # - DB에 user를 넣는다.
     def signup(self, db: Session, login_id: str, pwd: str, name: str) -> User | None:
+
+
+        existing_user = self.get_user_by_name(db, login_id)
+        if existing_user:
+            raise HTTPException(status_code=400, detail="중복된 아이디입니다")  # 중복된 경우 None 반환
         try:
             hashed_pwd = self.get_hashed_pwd(pwd)
             user = User(login_id=login_id, pwd=hashed_pwd, name=name)

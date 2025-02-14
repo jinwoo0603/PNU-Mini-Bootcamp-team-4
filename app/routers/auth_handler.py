@@ -21,9 +21,12 @@ def auth_signup(req: AuthSignupReq,
                 jwtUtil: JWTUtil=Depends(),
                 authService: AuthService=Depends(),
                 redisDB = Depends(get_redis)):
+
     user = authService.signup(db, req.login_id, req.pwd, req.name)
     if not user:
         raise HTTPException(status_code=400, detail="ERROR")
+    
+
     access_token = jwtUtil.create_token(user.model_dump())
    
     user.access_token = access_token
